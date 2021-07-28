@@ -5,6 +5,8 @@
 #pragma once
 
 #include "FileDeleter.h"
+#include "FilesListDlg.h"
+#include<functional>
 
 // CCrocCleanerDlg dialog
 class CCrocCleanerDlg : public CDialogEx
@@ -12,7 +14,6 @@ class CCrocCleanerDlg : public CDialogEx
 // Construction
 public:
 	CCrocCleanerDlg(CWnd* pParent = nullptr);	// standard constructor
-
 // Dialog Data
 #ifdef AFX_DESIGN_TIME
 	enum { IDD = IDD_CROCCLEANER_DIALOG };
@@ -21,10 +22,11 @@ public:
 	protected:
 	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV support
 
-
 // Implementation
 protected:
 	HICON m_hIcon;
+	int iFileCounter;
+	int iFileNumber;
 
 	// Generated message map functions
 	virtual BOOL OnInitDialog();
@@ -32,15 +34,22 @@ protected:
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
 	DECLARE_MESSAGE_MAP()
+	std::vector<std::filesystem::path> files;
+	static UINT threadControlFunction(LPVOID pParam);
+	
 public:
 	afx_msg void OnBnClickedbtnclean();
-	//CMFCEditBrowseCtrl cBrowssePath;
-	CFolderPickerDialog cBrowsePath;
 	CComboBox cComboBoxSelection;
 	CDateTimeCtrl cDtmStartDate;
 	CDateTimeCtrl cDtmEndDate;
 	CProgressCtrl cpBar;
-	FileDeleter fileDeleter;
+	FileDeleter FD;
 	CButton cCatalogueClear;
-	CEdit m_txtDateTestStart;
+	CMFCEditBrowseCtrl m_brwsPath;
+	CButton m_btnFilesList;
+	afx_msg void OnBnClickedbtnfileslist();
+	
+	
+
+	
 };
