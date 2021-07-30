@@ -27,16 +27,13 @@ protected:
 	HICON m_hIcon;
 	int iFileCounter;
 	int iFileNumber;
-
-	// Generated message map functions
 	virtual BOOL OnInitDialog();
 	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
-	DECLARE_MESSAGE_MAP()
 	std::vector<std::filesystem::path> files;
 	static UINT threadControlFunction(LPVOID pParam);
-	
+	DECLARE_MESSAGE_MAP()
 public:
 	afx_msg void OnBnClickedbtnclean();
 	CComboBox cComboBoxSelection;
@@ -49,7 +46,5 @@ public:
 	CButton m_btnFilesList;
 	afx_msg void OnBnClickedbtnfileslist();
 	
-	
 
-	
 };

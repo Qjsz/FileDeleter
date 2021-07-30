@@ -169,24 +169,28 @@ HCURSOR CCrocCleanerDlg::OnQueryDragIcon()
 {
 	return static_cast<HCURSOR>(m_hIcon);
 }
+
 class ThreadData {
 public:
-	int* iFileCounterPtr;
-	int* iFileNumberPtr;
+	int iFileCounterPtr;
+	int iFileNumberPtr;
 	CProgressCtrl* progressBarPointer;
-	ThreadData::ThreadData(int* cnt, int* nmb, CProgressCtrl* pbp) 
+	ThreadData::ThreadData(int cnt, int nmb, CProgressCtrl* pbp) 
 		:iFileCounterPtr{ cnt }, iFileNumberPtr{ nmb }, progressBarPointer{ pbp }{}
 };
 
 UINT CCrocCleanerDlg::threadControlFunction(LPVOID pParam) {
-	ThreadData* progressBar = (ThreadData*)pParam;
 
-	progressBar->progressBarPointer->SetRange(0, *(progressBar->iFileNumberPtr));
-	do 
-	{ 
-	progressBar->progressBarPointer->SetPos(*(progressBar->iFileCounterPtr));
-	} while (*(progressBar->iFileCounterPtr) < *(progressBar->iFileNumberPtr));
+	CCrocCleanerDlg* mainWindowPtr = (CCrocCleanerDlg*)pParam;
+
+	mainWindowPtr->cpBar.SetRange(0, mainWindowPtr->iFileNumber);
 	
+	while (mainWindowPtr->iFileCounter <= mainWindowPtr->iFileNumber)
+	{
+		mainWindowPtr->cpBar.SetPos(mainWindowPtr->iFileCounter);
+		::UpdateWindow(mainWindowPtr->GetSafeHwnd());
+	};
+
 	
 	return 0;
 }
@@ -235,16 +239,8 @@ void CCrocCleanerDlg::OnBnClickedbtnclean()
 			this->iFileCounter = 0;
 
 			//Prepare progess bar thread and its data
-			ThreadData* threadData = new ThreadData(&(this->iFileCounter), &(this->iFileNumber), &cpBar);
-			AfxBeginThread(threadControlFunction, threadData);
+			::AfxBeginThread(threadControlFunction, this);
 
-
-			//auto handleProgressBar = [](int* counter,int*number, CProgressCtrl* PCT) {do{PCT->SetPos((*counter));} while ((*counter) < (*number));};
-			//std::thread thread1(handleProgressBar, &(this->iFileCounter), &(this->iFileNumber), &cpBar);
-			//auto handleProgressBar = [this]() {do{cpBar.SetPos(iFileCounter); } while (iFileCounter < iFileNumber);};
-			//std::thread thread1(handleProgressBar);
-			
-			
 			//Delete all found files
 			FD.deletePaths(files, &iFileCounter);
 
@@ -252,25 +248,24 @@ void CCrocCleanerDlg::OnBnClickedbtnclean()
 			if (iClearCatalogues == 1) {
 				FD.deleteEmptyCatalogues();
 			}
-			//thread1.join();
+			
 			m_btnFilesList.ShowWindow(true);
 			m_btnFilesList.EnableWindow(true);
-	
-			AfxMessageBox(L"Files deleted", MB_ICONINFORMATION);
-			delete threadData;
+			::AfxMessageBox(L"Files deleted", MB_ICONINFORMATION);
+
 		}
 		else
 		{
 			m_btnFilesList.ShowWindow(false);
 			m_btnFilesList.EnableWindow(false);
-			AfxMessageBox(L"Wrong searching type selection");
+			::AfxMessageBox(L"Wrong searching type selection");
 		}
 	}
 	else
 	{
 		m_btnFilesList.ShowWindow(false);
 		m_btnFilesList.EnableWindow(false);
-		AfxMessageBox(L"Path is not selected");
+		::AfxMessageBox(L"Path is not selected");
 	}
 }
 
