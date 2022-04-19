@@ -1,50 +1,73 @@
-
-//CrocCleanerDlg.h : header file
-//
-
 #pragma once
 
 #include "FileDeleter.h"
 #include "FilesListDlg.h"
-#include<functional>
 
-// CCrocCleanerDlg dialog
 class CCrocCleanerDlg : public CDialogEx
 {
-// Construction
+
 public:
-	CCrocCleanerDlg(CWnd* pParent = nullptr);	// standard constructor
-// Dialog Data
+	CCrocCleanerDlg(CWnd* pParent = nullptr);	
+
 #ifdef AFX_DESIGN_TIME
 	enum { IDD = IDD_CROCCLEANER_DIALOG };
 #endif
 
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV support
 
-// Implementation
 protected:
-	HICON m_hIcon;
-	int iFileCounter;
-	int iFileNumber;
+
+	virtual void DoDataExchange(CDataExchange* pDX);
 	virtual BOOL OnInitDialog();
+
 	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
-	std::vector<std::filesystem::path> files;
-	static UINT threadControlFunction(LPVOID pParam);
-	DECLARE_MESSAGE_MAP()
-public:
 	afx_msg void OnBnClickedbtnclean();
-	CComboBox cComboBoxSelection;
-	CDateTimeCtrl cDtmStartDate;
-	CDateTimeCtrl cDtmEndDate;
-	CProgressCtrl cpBar;
-	FileDeleter FD;
-	CButton cCatalogueClear;
-	CMFCEditBrowseCtrl m_brwsPath;
-	CButton m_btnFilesList;
 	afx_msg void OnBnClickedbtnfileslist();
 	
 
+	DECLARE_MESSAGE_MAP()
+
+private:
+	std::vector<std::filesystem::path> files;
+
+	FileDeleter FD;
+
+	HICON m_hIcon;
+	size_t iFileCounter;
+	size_t iFileNumber;
+
+	CComboBox cComboBoxSelection;
+	CDateTimeCtrl cDtmStartDate;
+	CDateTimeCtrl cDtmEndDate;
+	CButton m_btnFilesList;
+	CButton cCatalogueClear;
+	CMFCEditBrowseCtrl m_brwsPath;
+
+	CProgressCtrl cpBar;	
+};
+
+class ThreadData
+{
+public:
+	int iFileCounterPtr;
+	int iFileNumberPtr;
+
+	CProgressCtrl* progressBarPointer;
+};
+
+class CAboutDlg : public CDialogEx
+{
+public:
+	CAboutDlg();
+
+#ifdef AFX_DESIGN_TIME
+	enum { IDD = IDD_ABOUTBOX };
+#endif
+
+protected:
+	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+
+protected:
+	DECLARE_MESSAGE_MAP()
 };

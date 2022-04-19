@@ -1,13 +1,9 @@
-﻿// FilesListDlg.cpp: plik implementacji
-//
-
-#include "pch.h"
+﻿#include "pch.h"
 #include "CrocCleaner.h"
 #include "FilesListDlg.h"
 #include "afxdialogex.h"
 
 
-// Okno dialogowe FilesListDlg
 
 IMPLEMENT_DYNAMIC(FilesListDlg, CDialogEx)
 
@@ -35,7 +31,9 @@ END_MESSAGE_MAP()
 void FilesListDlg::printVector() {
 
 	CString str,tmp;
-	for (auto& element : files) {
+
+	for (auto& element : files) 
+	{
 		tmp = (element.c_str());
 		str += tmp + _T("\r\n");
 	}

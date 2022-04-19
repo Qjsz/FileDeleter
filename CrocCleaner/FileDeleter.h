@@ -1,10 +1,8 @@
 #pragma once
-#include <filesystem>
-#include <vector>
-#include <string>
-
 
 namespace fsys = std::filesystem;
+
+static std::time_t to_time_t(std::string str);
 
 class FileDeleter
 {
@@ -15,9 +13,13 @@ protected:
 public:
 	FileDeleter();
 	FileDeleter(std::string);
+
 	bool pathOk();
-	void setPath(std::string);
-	bool deletePaths(std::vector<fsys::path>, int* counter);
+	void setPath(std::string pth) { path = pth; };
+	fsys::path getPath() { return path; };
+	
+	
+	bool deletePaths(std::vector<fsys::path>, CProgressCtrl& pb);
 	std::vector<fsys::path> findRequiredFiles(const int& filterType, const std::string& dateLow, const std::string& dateHigh);
 	bool deleteEmptyCatalogues();
 };

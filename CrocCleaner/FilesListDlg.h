@@ -1,8 +1,4 @@
 ﻿#pragma once
-#include <vector>
-#include <filesystem>
-
-// Okno dialogowe FilesListDlg
 
 class FilesListDlg : public CDialogEx
 {
